@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using CefSharp;
 using CefSharp.WinForms;
 using System.Diagnostics;
+using CefSharp.WinForms.Internals;
 
 namespace B
 {
@@ -29,6 +30,7 @@ namespace B
         {
             CefSettings settings = new CefSettings();
             Cef.Initialize(settings);
+            
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -43,7 +45,7 @@ namespace B
             x = tabControl1.SelectedIndex;
             if (textBox1.Text != "")
             {
-                if (textBox1.Text.IndexOf("http://") != -1)
+                if (textBox1.Text.IndexOf("//") != -1)
                 {
                     name[x].Load(textBox1.Text);
                 }
@@ -58,24 +60,28 @@ namespace B
         {
             tabControl1.TabPages.Add("1");
             tabControl1.SelectedIndex = tabControl1.TabPages.Count - 1;
+            tabControl1.SelectedTab.Text = "       New tab       ";
             int number = name.Count();
             name.Add(new ChromiumWebBrowser("http://google.com"));
             this.Controls.Add(name[number]);
             name[number].Parent = tabControl1.SelectedTab;
             name[number].Dock = DockStyle.Fill;
+            int x = tabControl1.SelectedIndex;
+            name[x].TitleChanged += OnBrowserTitleChanged;
+            name[x].AddressChanged += OnBrowserAddressChanged;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             int x;
-            x = tabControl1.SelectedIndex + 1;
+            x = tabControl1.SelectedIndex;
             name[x].Back();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             int x;
-            x = tabControl1.SelectedIndex + 1;
+            x = tabControl1.SelectedIndex;
             name[x].Forward();
         }
 
@@ -93,39 +99,47 @@ namespace B
         private void button4_Click(object sender, EventArgs e)
         {
             int x;
-            x = tabControl1.SelectedIndex + 1;
+            x = tabControl1.SelectedIndex;
             name[x].Load("https://www.google.pl/search?q=" + textBox2.Text);
             textBox2.Text = "";
-           
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tabPage3_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-
-        }
-        private void timer1_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-        {
-
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            
             int x = name.Count - 1;
             name.RemoveAt(x);
             tabControl1.SelectedIndex = tabControl1.SelectedIndex - 1;
             tabControl1.TabPages.RemoveAt(tabControl1.TabPages.Count - 1);
-            Process[] proc = Process.GetProcessesByName("CefSharp.BrowserSubprocess");
-            proc[0].Kill();
+        }
+
+        private void OnBrowserTitleChanged(object sender, TitleChangedEventArgs args)
+        {
+            int x = tabControl1.SelectedIndex;
+            this.InvokeOnUiThreadIfRequired(() => Text = args.Title);
+            tabControl1.SelectedTab.Text = "       " + this.Text + "       ";
+        }
+
+        private void OnBrowserAddressChanged(object sender, AddressChangedEventArgs args)
+        {
+            this.InvokeOnUiThreadIfRequired(() =>textBox1.Text = args.Address);
+        }
+
+        private void textbox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            int x = tabControl1.SelectedIndex;
+            if (e.KeyCode == Keys.Enter)
+            {
+                name[x].Load(textBox1.Text);
+            }
+        }
+
+        private void textbox2_KeyUp(object sender, KeyEventArgs e)
+        {
+            int x = tabControl1.SelectedIndex;
+            if (e.KeyCode == Keys.Enter)
+            {
+                name[x].Load("https://www.google.pl/search?q=" + textBox2.Text);
+            }           
         }
     }
 }

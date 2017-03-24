@@ -56,10 +56,12 @@
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox1.HideSelection = false;
             this.textBox1.Location = new System.Drawing.Point(215, 14);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(557, 20);
             this.textBox1.TabIndex = 2;
+            this.textBox1.KeyUp += this.textbox1_KeyUp;
             // 
             // button2
             // 
@@ -88,6 +90,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(260, 20);
             this.textBox2.TabIndex = 5;
+            this.textBox2.KeyUp += textbox2_KeyUp;
             // 
             // button4
             // 
@@ -96,7 +99,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 6;
-            this.button4.Text = "Szukaj";
+            this.button4.Text = "Search";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -109,12 +112,12 @@
             this.button5.TabIndex = 7;
             this.button5.Text = "Dodaj";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Visible = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // tabControl1
             // 
@@ -131,11 +134,12 @@
             // button6
             // 
             this.button6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button6.Enabled = false;
             this.button6.Location = new System.Drawing.Point(1122, 12);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 9;
-            this.button6.Text = "Ulubione";
+            this.button6.Text = "Favorites";
             this.button6.UseVisualStyleBackColor = true;
             // 
             // button7
@@ -147,6 +151,7 @@
             this.button7.TabIndex = 10;
             this.button7.Text = "Usuń";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Visible = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // okno
@@ -173,6 +178,7 @@
 
         }
 
+        
         #endregion
 
         private System.Windows.Forms.Button button1;
